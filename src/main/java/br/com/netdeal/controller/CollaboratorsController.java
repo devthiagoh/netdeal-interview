@@ -41,8 +41,8 @@ public class CollaboratorsController {
 	
 	@ResponseBody
 	@PostMapping(value = "save",
-	consumes = MediaType.APPLICATION_JSON_VALUE,
-	produces = MediaType.APPLICATION_JSON_VALUE)
+				consumes = MediaType.APPLICATION_JSON_VALUE,
+				produces = MediaType.APPLICATION_JSON_VALUE)
 	public String save(@Validated @RequestBody Collaborators collaborator, Model model) {
 		
 		try {
