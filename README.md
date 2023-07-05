@@ -1,6 +1,7 @@
-                                                    Teste Técnico NetDeal
+                                       Teste Técnico NetDeal
 
-  O projeto NetDealManager foi desenvolvido utilizando Eclipse + SpringBoot + Spring Framework + HTML + JavaScript + MongoDB.
+                        O projeto NetDealManager foi desenvolvido utilizando 
+                Eclipse + SpringBoot + Spring Framework + HTML + JavaScript + MongoDB.
 
  <p align="center">   
    <a href="https://www.eclipse.org" target="blank"><img src="https://img.shields.io/badge/Eclipse-2C2255?style=for-the-badge&logo=eclipse&logoColor=white" width="140" alt="Eclipse Logo" /></a>
