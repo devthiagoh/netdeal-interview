@@ -36,17 +36,6 @@ public class CollaboratorsController {
 		service.newCollaborator(model);		
 		service.listAll(model);
 		
-//		for (int i = 1; i < 11; i++) {			
-//			Collaborators collaborator = new Collaborators();
-//			collaborator.setName("Colaborador "+i);
-//			collaborator.setHierarchy("Desenvolvedor Sênior");
-//			collaborator.setComplexity("Forte");
-//			collaborator.setScore((i * 10) + "%");
-//			collaborators.add(collaborator);
-//		}		
-//		
-//		repository.saveAll(collaborators);
-		
 		return "collaborators";
 	}
 	
