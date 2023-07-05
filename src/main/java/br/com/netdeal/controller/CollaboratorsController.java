@@ -40,8 +40,8 @@ public class CollaboratorsController {
 	}
 	
 	@ResponseBody
-	@PostMapping(value = "save",
-				consumes = MediaType.APPLICATION_JSON_VALUE,
+	@PostMapping(value = "save", 
+				consumes = MediaType.APPLICATION_JSON_VALUE, 
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public String save(@Validated @RequestBody Collaborators collaborator, Model model) {
 		
@@ -59,8 +59,8 @@ public class CollaboratorsController {
 	public String edit(@PathVariable String id, Model model) {
 		
 		try {
-			
-			if(Objects.nonNull(id))
+
+			if (Objects.nonNull(id))
 				service.getCollaborator(id, model);
 		} catch (Exception e) {
 			e.printStackTrace();
