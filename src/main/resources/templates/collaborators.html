@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>NetdealManager</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="icon" href="https://netdealstore.com.br/api/images/proxy?quality=100&amp;src=https://s3.amazonaws.com/producao.spayce.com.br/1638975755637_favicon.png" type="image/x-icon">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container mt-05">
+		<h2 class="text-center mb-3">.::NetdealManager::.</h2>
+			<form id="form">				
+				<div class="row">
+						<div class="col-5 form-group">
+							<label>Nome</label>				
+							<input type="text" class="form-control" th:field="*{collaborator.name}" />
+						</div>
+						<div class="col-5">				
+							<label>Senha</label>				
+							<input type="text" class="form-control" th:field="*{collaborator.password}" />
+						</div>
+						<div class="col-2">
+							<button class="btn btn-small btn-success form-control mt-05" type="button" id="save">Salvar</button>
+						</div>
+				</div>
+			</form>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="col-50-pcnt">Colaborador</th>
+                    <th class="col-14-pcnt">Score</th>
+                    <th class="col-30-pcnt">Complexidade</th>
+                    <th class="col-5-pcnt"></th>
+                    <th class="col-5-pcnt"></th>
+                </tr>
+            </thead>
+            <tbody>
+                    <tr th:each="collaborator: ${collaborators}">
+                        <td th:text="${collaborator.name}" class="td-striped"></td>
+                        <td class="text-center"><span class="fw-600" th:text="${collaborator.score}"></span></td>
+                        <td class="td-striped status border-bottom-0"><span class="active" th:text="${collaborator.complexity}"></span></td>
+                        <td>
+							<a class="edit" href="javascript:void(0);" th:value="${collaborator.id}" onclick="javascript:edit(this);"
+								data-toggle="modal" data-target="#modal">
+								<span aria-hidden="true">
+									<i class="fa fa-edit"></i>
+								</span>
+							</a>
+						</td>
+                        <td>
+							<a class="delete" href="javascript:void(0);" th:value="${collaborator.id}" onclick="javascript:remove(this);">
+								<span aria-hidden="true">
+									<i class="fa fa-close"></i>
+								</span>
+							</a>
+						</td>
+                    </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div id="modal" th:fragment="modal(id)" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title">Editar</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+	                    <span aria-hidden="true">&times;</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	                <div class="form-group">
+						<label>Nome</label>				
+						<input type="text" class="form-control" th:field="*{collaborator.name}" />
+					</div>
+					<div class="form-group">				
+						<label>Senha</label>				
+						<input type="text" class="form-control" th:field="*{collaborator.password}" />
+					</div>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+					<button class="btn btn-small btn-success form-control" type="button" id="save">Salvar</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+    
+    <script src="/js/main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
