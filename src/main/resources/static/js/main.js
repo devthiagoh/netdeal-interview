@@ -1,23 +1,45 @@
-document.getElementById("save").onclick = function(){
+document.getElementById("btnSave").onclick = function(){
     
-	var formvalue = document.getElementById('form');
+	var formvalue = document.getElementById('newForm');
   	var formdata = new FormData(formvalue);
 
-	var json = parseToJson(formdata);
+	var json = parseToJson(formdata, 'new');
 
 	requestSave(json);
 };
 
-function parseToJson(data){
+document.getElementById("btnEdit").onclick = function(){
+    
+	var formvalue = document.getElementById('editForm');
+  	var formdata = new FormData(formvalue);
+
+	var json = parseToJson(formdata, 'edit');
+
+	requestSave(json);
+};
+
+function parseToJson(data, typeform){
 	var object = {};
 	data.forEach(function(value, key){
 	   if(key === 'password')
 	   	object[key] = btoa(value);
-	   else
+	   else if(key === 'collaborators'){
+	 	let collaborators = typeform === 'new' ? $('#newSelect').val() : $('#editSelect').val();
+		let objects = [];
+		collaborators.forEach(function(v, k){
+			let vl = v.split(',');
+			let collaborator = {
+				"id": vl[0] + "",
+				"name": vl[1]
+			}	   
+			objects[k] = collaborator;
+		});
+	   	object[key] = objects;		   
+	   } else
 	   	object[key] = value;	
 	});
 	var json = JSON.stringify(object);
-	//	console.log(json);
+	//console.log(json);
 	return json;
 };
 
@@ -34,20 +56,23 @@ function requestSave(json){
 };
 
 function requestEdit(uri){
-//	var req = new XMLHttpRequest();
-//	req.onreadystatechange = function() {
-//	    if (this.readyState == 4 && this.status == 200) {
-//			console.log(this);
-//       		window.location.href = 'list';			
-//	    }
-//	};
-//	req.open('GET', uri);
-//	req.send();
 	fetch(uri, { method: "GET" })
 	.then((response) => {
-		console.log(response.ok);
-		console.log(response.status);
-//		$('#modal').find('.modal-body').html(data);
+		return response.json();  		
+	})
+	.then((responseJson) => {
+	    console.log("Success:", responseJson);
+	    $('.collaboratorName').val(responseJson.editCollaborator.name);
+	    let collaborators = responseJson.editCollaborator.collaborators;
+	    let collaboratorsSelected = [];
+	    
+	    for (var i = 0; i < collaborators.length; i++) {
+			console.log('collaborator: ' +collaborators[i].name);
+			collaboratorsSelected[i] = collaborators[i].name.trim();
+		}
+		console.log('collaboratorsSelected: ' + JSON.stringify(collaboratorsSelected));
+	    $('.selectpicker').selectpicker(JSON.parse(JSON.stringify(collaboratorsSelected)));
+	    $('.selectpicker').selectpicker('render');	    
 	})
 	.catch((error) => {
 	   console.error("Error:", error);
@@ -77,8 +102,3 @@ function remove(element){
 	requestDelete(uri);
 };
 
-//document.getElementById("modal").on('show.bs.modal', function () {
-//        $.get("/modals/modal1", function (data) {
-//            $('#exampleModal1').find('.modal-body').html(data);
-//        })
-//    });

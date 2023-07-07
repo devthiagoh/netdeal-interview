@@ -12,48 +12,63 @@
 		type="image/x-icon">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
 		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 	<link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
 	<div class="container mt-05">
 		<h2 class="text-center mb-3">.::NetdealManager::.</h2>
-		<form id="form">
+		<form id="newForm">
 			<div class="row">
-				<div class="col-5 form-group">
+				<div class="col-4 form-group">
 					<label>Nome</label>
 					<input type="text" class="form-control" th:field="*{collaborator.name}" />
 				</div>
-				<div class="col-5">
+				<div class="col-3">
 					<label>Senha</label>
 					<input type="text" class="form-control" th:field="*{collaborator.password}" />
 				</div>
+				<div class="col-3" >
+					<label>Superior(es)</label>
+					<select id="newSelect" th:field="*{editCollaborator.collaborators}" class="selectpicker form-control" multiple title="Selecione...">
+						<option th:each="collaborator: ${collaborators}" 
+						        th:value="${ collaborator.id+ ', ' +collaborator.name }" 
+						        th:text="${collaborator.name}" ></option>
+					</select>
+				</div>
 				<div class="col-2">
-					<button class="btn btn-small btn-success form-control mt-05" type="button" id="save">Salvar</button>
+					<button class="btn btn-small btn-success form-control mt-05" type="button" id="btnSave">Salvar</button>
 				</div>
 			</div>
 		</form>
 		<table class="table table-striped">
 			<thead>
 				<tr>
-					<th class="col-50-pcnt">Colaborador</th>
+					<th class="col-30-pcnt">Colaborador</th>
+					<th class="col-30-pcnt">Superior(es)</th>
 					<th class="col-14-pcnt">Score</th>
 					<th class="col-30-pcnt">Complexidade</th>
 					<th class="col-5-pcnt"></th>
 					<th class="col-5-pcnt"></th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr th:each="collaborator: ${collaborators}">
+			<tbody data-spy="scroll">
+				<tr th:each="collaborator : ${collaborators}">
+					<td th:text="${collaborator.id}" hidden="true" th:attr="id=${collaborator.id}"></td>
 					<td th:text="${collaborator.name}" class="td-striped"></td>
+					<td class="td-striped">
+						<div th:each="hierarchy : ${collaborator.hierarchies}" class="li">						
+							<span th:text="${hierarchy.collaborator.name}"></span>
+						</div>
+					</td>
 					<td class="text-center"><span class="fw-600" th:text="${collaborator.score}"></span></td>
-					<td class="td-striped status border-bottom-0"><span class="active"
-							th:text="${collaborator.complexity}"></span></td>
+					<td class="td-striped status border-bottom-0"><span class="active" th:text="${collaborator.complexity}"></span></td>
 					<td>
 						<a class="edit" href="javascript:void(0);" th:value="${collaborator.id}"
-							onclick="javascript:edit(this);" data-toggle="modal" data-target="#modal">
+							data-toggle="modal" data-target="#editModal" onclick="javascript:edit(this);">
 							<span aria-hidden="true">
-								<i class="fa fa-edit"></i>
+								<i class="fa fa-edit fs-25-px"></i>
 							</span>
 						</a>
 					</td>
@@ -61,7 +76,7 @@
 						<a class="delete" href="javascript:void(0);" th:value="${collaborator.id}"
 							onclick="javascript:remove(this);">
 							<span aria-hidden="true">
-								<i class="fa fa-close"></i>
+								<i class="fa fa-close fs-25-px"></i>
 							</span>
 						</a>
 					</td>
@@ -70,7 +85,7 @@
 		</table>
 	</div>
 
-	<div id="modal" th:fragment="modal(id)" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+	<div id="editModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -79,26 +94,36 @@
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-				<form id="form">
+				<form id="editForm">
 					<div class="modal-body">
+						<input type="text" class="form-control" th:field="*{editCollaborator.id}" hidden/>
 						<div class="form-group">
 							<label>Nome</label>
-							<input type="text" class="form-control" th:field="*{collaborator.name}" />
+							<input type="text" class="form-control collaboratorName" th:field="*{editCollaborator.name}" />
 						</div>
 						<div class="form-group">
-							<label>Senha</label>
-							<input type="text" class="form-control" th:field="*{collaborator.password}" />
+							<label>Nova Senha</label>
+							<input type="text" class="form-control collaboratorSenha" th:field="*{editCollaborator.password}" />
+						</div>
+						<div class="form-group" >
+							<label>Superior(es)</label>
+							<select id="editSelect" th:field="*{editCollaborator.collaborators}" class="selectpicker form-control collaboratorHierarchy" multiple title="Selecione...">
+								<option th:each="collaborator: ${collaborators}" 
+								        th:value="${ collaborator.id+ ', ' +collaborator.name }" 
+								        th:text="${collaborator.name}" ></option>
+							</select>
 						</div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-						<button class="btn btn-small btn-success form-control" type="button" id="save">Salvar</button>
+						<button class="btn btn-small btn-success form-control" type="button" id="btnEdit">Salvar</button>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
 
+	<script src="/js/jquery-3.7.0.min.js"></script>
 	<script src="/js/main.js"></script>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
 		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -109,6 +134,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
 		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
 		crossorigin="anonymous"></script>
+	<script src="/js/bootstrap-select-1.13.14/js/bootstrap-select.js"></script>
 </body>
 
 </html>
