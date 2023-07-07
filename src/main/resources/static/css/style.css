@@ -8271,6 +8271,28 @@ h1, h2, h3, h4, h5,
  .fw-600 {
 	font-weight: 600;
  }
+ 
+ .li {
+	display: list-item; 
+ }
+ 
+ .fs-25-px {
+	 font-size: 25px;
+ }
+ 
+ .selectpicker button {
+	 padding: 5px;
+ }
+ 
+ .bootstrap-select>.dropdown-toggle {
+	 border: 1px solid #ced4da;
+ }
+ 
+ .bootstrap-select .dropdown-toggle:focus {
+     outline: none; 
+     outline: none!important; 
+     outline-offset: 0; 
+}
   
 .checkbox-wrap {
   display: block;
