@@ -62,6 +62,7 @@ function requestEdit(uri){
 	})
 	.then((responseJson) => {
 	    console.log("Success:", responseJson);
+	    $('.collaboratorId').val(responseJson.editCollaborator.id);
 	    $('.collaboratorName').val(responseJson.editCollaborator.name);
 	    let collaborators = responseJson.editCollaborator.collaborators;
 	    let collaboratorsSelected = [];

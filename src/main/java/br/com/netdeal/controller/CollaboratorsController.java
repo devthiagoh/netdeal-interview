@@ -47,7 +47,6 @@ public class CollaboratorsController {
 	public String save(@Validated @RequestBody CollaboratorDTO collaborator, Model model) {
 		
 		try {
-			System.out.println("dto: " +collaborator);
 			service.save(collaborator, model);
 		} catch (Exception e) {
 			e.printStackTrace();
