@@ -6,13 +6,10 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+	<link rel="icon" href="https://netdealstore.com.br/api/images/proxy?quality=100&amp;src=https://s3.amazonaws.com/producao.spayce.com.br/1638975755637_favicon.png" type="image/x-icon">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="icon"
-		href="https://netdealstore.com.br/api/images/proxy?quality=100&amp;src=https://s3.amazonaws.com/producao.spayce.com.br/1638975755637_favicon.png"
-		type="image/x-icon">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/css/bootstrap-select.min.css">
 	<link rel="stylesheet" href="/css/style.css">
 </head>
 
@@ -23,15 +20,23 @@
 			<div class="row">
 				<div class="col-4 form-group">
 					<label>Nome</label>
-					<input type="text" class="form-control" th:field="*{collaborator.name}" />
+					<input id="collaboratorName" 
+						   type="text" th:field="*{collaborator.name}"
+						   class="form-control collaboratorName"
+						   onfocus="removeReadonly(this);" readonly/>
 				</div>
 				<div class="col-3">
 					<label>Senha</label>
-					<input type="text" class="form-control" th:field="*{collaborator.password}" />
+					<input id="collaboratorPsswd" 
+						   type="password" th:field="*{collaborator.password}"
+						   class="form-control collaboratorPsswd"
+						   onkeyup="validatePsswd('#collaboratorPsswd');"
+						   onfocus="removeReadonly(this);" minlength="8" readonly/>
 				</div>
 				<div class="col-3" >
 					<label>Superior(es)</label>
-					<select id="newSelect" th:field="*{editCollaborator.collaborators}" class="selectpicker form-control" multiple title="Selecione...">
+					<select id="newSelect" th:field="*{collaborator.collaborators}" 
+							class="selectpicker form-control" multiple title="Selecione...">
 						<option th:each="collaborator: ${collaborators}" 
 						        th:value="${ collaborator.id+ ', ' +collaborator.name }" 
 						        th:text="${collaborator.name}" ></option>
@@ -96,18 +101,26 @@
 				</div>
 				<form id="editForm">
 					<div class="modal-body">
-						<input type="text" class="form-control collaboratorId" th:field="*{editCollaborator.id}" hidden/>
+						<input type="text" class="form-control editCollaboratorId" th:field="*{editCollaborator.id}" hidden/>
 						<div class="form-group">
 							<label>Nome</label>
-							<input type="text" class="form-control collaboratorName" th:field="*{editCollaborator.name}" />
+							<input id="editCollaboratorName" 
+								   type="text" th:field="*{editCollaborator.name}"
+								   class="form-control editCollaboratorName"
+								   onfocus="removeReadonly(this);" readonly/> 
 						</div>
 						<div class="form-group">
 							<label>Nova Senha</label>
-							<input type="text" class="form-control collaboratorSenha" th:field="*{editCollaborator.password}" />
+							<input id="editCollaboratorPsswd" 
+								   type="password" th:field="*{editCollaborator.password}"
+								   class="form-control editCollaboratorPsswd"
+								   onkeyup="validatePsswd('#editCollaboratorPsswd');"
+								   onfocus="removeReadonly(this);" readonly/>
 						</div>
 						<div class="form-group" >
 							<label>Superior(es)</label>
-							<select id="editSelect" th:field="*{editCollaborator.collaborators}" class="selectpicker form-control collaboratorHierarchy" multiple title="Selecione...">
+							<select id="editSelect" th:field="*{editCollaborator.collaborators}" 
+									class="selectpicker form-control editCollaboratorHierarchy" multiple title="Selecione...">
 								<option th:each="collaborator: ${collaborators}" 
 								        th:value="${ collaborator.id+ ', ' +collaborator.name }" 
 								        th:text="${collaborator.name}" ></option>
@@ -126,15 +139,15 @@
 	<script src="/js/jquery-3.7.0.min.js"></script>
 	<script src="/js/main.js"></script>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-		crossorigin="anonymous"></script>
+			integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+			crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-		crossorigin="anonymous"></script>
+			integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+			crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-		crossorigin="anonymous"></script>
-	<script src="/js/bootstrap-select-1.13.14/js/bootstrap-select.js"></script>
+			integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+			crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js"></script>
 </body>
 
 </html>

@@ -2,14 +2,15 @@ package br.com.netdeal.dto;
 
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.com.netdeal.domain.Collaborators;
 
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CollaboratorDTO {
-		
+	
 	private String id;
 	private String name;
 	private String password;
