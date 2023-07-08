@@ -5,6 +5,7 @@ import java.util.Objects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.netdeal.dto.CollaboratorDTO;
+import br.com.netdeal.dto.ValidateDTO;
 import br.com.netdeal.service.CollaboratorsService;
 
 @Controller
@@ -44,10 +46,10 @@ public class CollaboratorsController {
 	
 	@ResponseBody
 	@PostMapping(value = "save", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public String save(@Validated @RequestBody CollaboratorDTO collaborator, Model model) {
+	public String save(@Validated @RequestBody CollaboratorDTO dto, Model model) {
 		
 		try {
-			service.save(collaborator, model);
+			service.save(dto, model);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("Erro ao salvar colaborador!" +e.getMessage());
@@ -82,5 +84,22 @@ public class CollaboratorsController {
 		}	    
 		
 		return "collaborators";
+	}
+
+	@ResponseBody
+	@PostMapping(value = "validatePsswd", 
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<HttpStatus> validatePsswd(@Validated @RequestBody ValidateDTO dto, Model model) {
+		
+		try {
+			if (Objects.nonNull(dto))
+				service.validatePsswd(dto.getPassword(), model);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("Erro ao validar colaborador!" +e.getMessage());
+		}	    
+		
+		return ResponseEntity.ok(HttpStatus.OK);
 	}
 }

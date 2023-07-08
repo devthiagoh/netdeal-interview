@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import br.com.netdeal.domain.Collaborators;
 import br.com.netdeal.domain.Hierarchy;
 import br.com.netdeal.dto.CollaboratorDTO;
+import br.com.netdeal.dto.ValidateDTO;
 import br.com.netdeal.repository.CollaboratorsRepository;
 
 @Service
@@ -40,30 +41,34 @@ public class CollaboratorsService {
 		model.addAttribute("collaborators", repository.findAll());
 	}
 	
-	public void save(CollaboratorDTO dto, Model model){
+	public void save(CollaboratorDTO dto, Model model) throws Exception{
 		
 		if(Objects.nonNull(dto)){
 			
-			Collaborators collaborator = new Collaborators();			
-
-			List<Collaborators> collaborators = dto.getCollaborators();
-			collaborator.setHierarchies(new ArrayList<>());
-			if(Objects.nonNull(collaborators))
-				collaborators.forEach( c -> {
-					Hierarchy h = new Hierarchy();
-					h.setCollaborator(c);
-					collaborator.getHierarchies().add(h);
-				});
-			collaborator.setId(dto.getId());
-			collaborator.setName(dto.getName());
-			collaborator.setPassword(dto.getPassword());
-			collaborator.setComplexity("Forte");
-			collaborator.setScore("25%");
-			repository.save(collaborator);
-			model.addAttribute("collaborator", collaborator);
+			boolean valid = validatePsswd(dto.getPassword(), model);
+			
+			if(valid) {				
+				Collaborators collaborator = new Collaborators();			
+				
+				List<Collaborators> collaborators = dto.getCollaborators();
+				collaborator.setHierarchies(new ArrayList<>());
+				if(Objects.nonNull(collaborators))
+					collaborators.forEach( c -> {
+						Hierarchy h = new Hierarchy();
+						h.setCollaborator(c);
+						collaborator.getHierarchies().add(h);
+					});
+				collaborator.setId(dto.getId());
+				collaborator.setName(dto.getName());
+				collaborator.setPassword(dto.getPassword());
+				collaborator.setComplexity(dto.getComplexity());
+				collaborator.setScore(dto.getScore());
+				repository.save(collaborator);
+			} else {
+				throw new Exception();
+			}
+			initModel(model);
 		}
-		
-		initModel(model);
 	}
 	
 	public void getCollaborator(String id, Model model) throws JsonProcessingException{
@@ -104,5 +109,30 @@ public class CollaboratorsService {
 		newCollaborator(model);
 		editCollaborator(model);
 		listAll(model);		
+	}
+	
+	public boolean validatePsswd(String psswd, Model model) {
+		System.out.println("validatePassword...");
+		boolean valid = false;
+		valid = validateComplexity(psswd, model);
+		valid = calculateScore(psswd, model);
+		valid = true;
+		return valid;
+	}
+	
+	private boolean validateComplexity(String psswd, Model model) {
+		System.out.println("calculateComplexity...");
+		boolean valid = false;
+		if(!psswd.isEmpty() && psswd.equals("1"))
+			System.out.println("Valid Password");
+		else
+			System.out.println("Invalid Password");
+		return valid;
+	}
+	
+	private boolean calculateScore(String psswd, Model model) {
+		System.out.println("calculateScore...");
+		boolean valid = false;
+		return valid;
 	}
 }
