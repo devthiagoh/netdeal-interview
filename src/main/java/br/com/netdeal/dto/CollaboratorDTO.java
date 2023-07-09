@@ -2,11 +2,9 @@ package br.com.netdeal.dto;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.com.netdeal.domain.Collaborators;
-
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CollaboratorDTO {
@@ -14,12 +12,10 @@ public class CollaboratorDTO {
 	private String id;
 	private String name;
 	private String password;
-	@JsonIgnore
 	private String score;
-	@JsonIgnore
 	private String complexity;
 	private List<Collaborators> collaborators;
-	
+
 	public String getId() {
 		return id;
 	}
@@ -34,14 +30,6 @@ public class CollaboratorDTO {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public List<Collaborators> getCollaborators() {
-		return collaborators;
-	}
-
-	public void setCollaborators(List<Collaborators> collaborators) {
-		this.collaborators = collaborators;
 	}
 
 	public String getPassword() {
@@ -66,6 +54,14 @@ public class CollaboratorDTO {
 
 	public void setComplexity(String complexity) {
 		this.complexity = complexity;
+	}
+
+	public List<Collaborators> getCollaborators() {
+		return collaborators;
+	}
+
+	public void setCollaborators(List<Collaborators> collaborators) {
+		this.collaborators = collaborators;
 	}
 	
 }

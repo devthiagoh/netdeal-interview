@@ -8292,6 +8292,15 @@ input[readonly] {
      cursor: text;
      background-color: #fff !important;
 }
+
+.cc {	
+	border-radius: 30px;
+	display: block;
+	text-align: center;
+	font-weight: 600; 
+	background: #cff6dd;
+	color: #1fa750;
+}
   
 .checkbox-wrap {
   display: block;
