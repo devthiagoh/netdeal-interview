@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Document(collection = "collaborators")
-//@EntityScan
 public class Collaborators {
 	
 	public static final String SEQUENCE_NAME = "collaborators_sequence";
@@ -17,9 +16,7 @@ public class Collaborators {
 	private String id;
 	private String name;
 	private String password;
-	@JsonIgnore
 	private String score;
-	@JsonIgnore
 	private String complexity;
 	private List<Hierarchy> hierarchies;
 	

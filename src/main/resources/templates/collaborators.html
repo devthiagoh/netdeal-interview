@@ -18,7 +18,7 @@
 		<h2 class="text-center mb-3">.::NetdealManager::.</h2>
 		<form id="newForm">
 			<div class="row">
-				<div class="col-4 form-group">
+				<div class="col-3 form-group">
 					<label>Nome</label>
 					<input id="collaboratorName" 
 						   type="text" th:field="*{collaborator.name}"
@@ -33,6 +33,11 @@
 						   onkeyup="validatePsswd('#collaboratorPsswd');"
 						   onfocus="removeReadonly(this);" minlength="8" readonly/>
 				</div>
+				<div class="col-2">	
+					<label>Complexidade</label>			
+					<input type="text" th:field="*{collaborator.complexity}"
+						   class="form-control collaboratorComplexity cc"/>
+				</div>
 				<div class="col-3" >
 					<label>Superior(es)</label>
 					<select id="newSelect" th:field="*{collaborator.collaborators}" 
@@ -42,8 +47,8 @@
 						        th:text="${collaborator.name}" ></option>
 					</select>
 				</div>
-				<div class="col-2">
-					<button class="btn btn-small btn-success form-control mt-05" type="button" id="btnSave">Salvar</button>
+				<div class="col-1">
+					<button class="btn btn-small btn-success form-control mt-05 p-0" type="button" id="btnSave">Salvar</button>
 				</div>
 			</div>
 		</form>

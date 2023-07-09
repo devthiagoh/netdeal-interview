@@ -133,13 +133,9 @@ function validatePsswd(formid){
 	
 	if(json.password){
 		console.log('validate...');
-		fetch('validatePsswd', 
-		{ method: "POST",
-		  headers: {
-		    "Content-Type": "application/json",
-		  },
-		  body: jsonParsed 
-	  	})
+		let uri = json.password+'/validate';
+		
+		fetch( uri, { method: "GET" })
 		.then((response) => {
 			return response.json();  		
 		})
@@ -147,7 +143,7 @@ function validatePsswd(formid){
 		    console.log("Success:", responseJson);
 		    
 		    if(responseJson != null){
-				console.log('Senha inválida');	
+				$('.collaboratorComplexity').val(responseJson.complexity);	
 			}
 	 
 		})

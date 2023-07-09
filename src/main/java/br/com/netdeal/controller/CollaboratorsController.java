@@ -5,10 +5,11 @@ import java.util.Objects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.netdeal.dto.CollaboratorDTO;
-import br.com.netdeal.dto.ValidateDTO;
 import br.com.netdeal.service.CollaboratorsService;
 
 @Controller
@@ -45,6 +45,7 @@ public class CollaboratorsController {
 	}
 	
 	@ResponseBody
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	@PostMapping(value = "save", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public String save(@Validated @RequestBody CollaboratorDTO dto, Model model) {
 		
@@ -87,19 +88,17 @@ public class CollaboratorsController {
 	}
 
 	@ResponseBody
-	@PostMapping(value = "validatePsswd", 
-			consumes = MediaType.APPLICATION_JSON_VALUE,
-			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<HttpStatus> validatePsswd(@Validated @RequestBody ValidateDTO dto, Model model) {
+	@GetMapping(value = "{psswd}/validate",	produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Model> validate(@PathVariable String psswd, Model model) {
 		
 		try {
-			if (Objects.nonNull(dto))
-				service.validatePsswd(dto.getPassword(), model);
+			if (Objects.nonNull(psswd))
+				service.validatePsswd(psswd, model);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("Erro ao validar colaborador!" +e.getMessage());
-		}	    
+		}
 		
-		return ResponseEntity.ok(HttpStatus.OK);
+		return ResponseEntity.ok(model);
 	}
 }
