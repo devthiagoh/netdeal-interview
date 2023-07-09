@@ -8293,13 +8293,41 @@ input[readonly] {
      background-color: #fff !important;
 }
 
-.cc {	
+.complexity {	
 	border-radius: 30px;
 	display: block;
 	text-align: center;
 	font-weight: 600; 
-	background: #cff6dd;
-	color: #1fa750;
+}
+
+.very-weak {	
+	background-position: -12px center;
+	background-image: url(../img/bg_strength_gradient.jpg);
+}
+
+.weak {	
+	background-position: -56px center;
+	background-image: url(../img/bg_strength_gradient.jpg);
+}
+
+.good {	
+	background-position: -160px center;
+	background-image: url(../img/bg_strength_gradient.jpg);
+}
+
+.strong {	
+	background-position: -288px center;
+	background-image: url(../img/bg_strength_gradient.jpg);
+}
+
+.very-strong {	
+	background-position: -340px center;
+	background-image: url(../img/bg_strength_gradient.jpg);
+}
+
+.very-strong-td {	
+	background-position: -310px center;
+	background-image: url(../img/bg_strength_gradient.jpg);
 }
   
 .checkbox-wrap {

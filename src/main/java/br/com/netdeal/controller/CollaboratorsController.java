@@ -45,7 +45,7 @@ public class CollaboratorsController {
 	}
 	
 	@ResponseBody
-	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+//	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	@PostMapping(value = "save", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public String save(@Validated @RequestBody CollaboratorDTO dto, Model model) {
 		

@@ -143,7 +143,13 @@ function validatePsswd(formid){
 		    console.log("Success:", responseJson);
 		    
 		    if(responseJson != null){
-				$('.collaboratorComplexity').val(responseJson.complexity);	
+				$('.collaboratorComplexity').text(responseJson.complexity);	
+				$('.collaboratorComplexity').removeClass('very-strong');	
+				$('.collaboratorComplexity').removeClass('strong');	
+				$('.collaboratorComplexity').removeClass('good');	
+				$('.collaboratorComplexity').removeClass('weak');	
+				$('.collaboratorComplexity').removeClass('very-weak');	
+				$('.collaboratorComplexity').addClass(responseJson.class);	
 			}
 	 
 		})
