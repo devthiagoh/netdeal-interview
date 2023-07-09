@@ -32,6 +32,17 @@ public class CollaboratorsService {
 	private static final String VERY_WEAK = "Very Weak";
 	private static final String TOO_SHORT = "Too Short";
 	
+	private static Map<String, String> classes = new HashMap<>();
+	
+	static {
+		classes.put(VERY_STRONG, "very-strong");
+		classes.put(STRONG, "strong");
+		classes.put(GOOD, "good");
+		classes.put(WEAK, "weak");
+		classes.put(VERY_WEAK, "very-weak");
+		classes.put(TOO_SHORT, "too-short");
+	}	
+	
 	@Autowired
 	private CollaboratorsRepository repository;
 	
@@ -74,7 +85,7 @@ public class CollaboratorsService {
 				collaborator.setName(dto.getName());
 				collaborator.setPassword(dto.getPassword());
 				collaborator.setComplexity(getComplexity(dto.getPassword()));
-				collaborator.setScore(calculateScore(dto.getPassword()));
+				collaborator.setScore(getScore(dto.getPassword()));
 				repository.save(collaborator);
 			} else {
 				throw new Exception();
@@ -121,8 +132,13 @@ public class CollaboratorsService {
 	}
 	
 	private String getComplexity(String psswd) {
-		Map<Boolean, String> complexity = calculateComplexity(psswd);
-		return complexity.get(true);
+		Map<Integer, String> complexity = calculateComplexity(psswd);
+		return complexity.get(psswd.length());
+	}
+	
+	private String getScore(String psswd) {
+		Map<Integer, String> score = calculateScore(psswd);
+		return score.get(psswd.length());
 	}
 	
 	public boolean validatePsswd(String psswd, Model model) {
@@ -136,8 +152,7 @@ public class CollaboratorsService {
 			return valid;
 		
 		valid = validateComplexity(psswd, model);
-		valid = calculateScore(psswd, model);
-
+		valid = true;
 		return valid;
 	}
 	
@@ -146,53 +161,54 @@ public class CollaboratorsService {
 		log.info("validateComplexity...");
 		boolean valid = false;
 		
-		Map<Boolean, String> complexity = calculateComplexity(psswd);
+		Map<Integer, String> complxity = calculateComplexity(psswd);
 		
-		if(Objects.nonNull(complexity.get(true)) && 
-				(complexity.get(true).equals(VERY_STRONG) || 
-				 complexity.get(true).equals(STRONG)) ||
-				 complexity.get(true).equals(GOOD))
-			valid = true;
+		int psswdlength = psswd.length();
 		
-		log.info(complexity.get(true));
-		String collaboratorComplexity = complexity.get(true);
-		model.addAttribute("complexity", collaboratorComplexity);
+		log.info(complxity.get(psswdlength));
+				
+		String complexity = complxity.get(psswdlength);
+		model.addAttribute("complexity", complexity);		
+		model.addAttribute("class", classes.get(complexity));
 		return valid;
 	}
 	
-	private Map<Boolean, String> calculateComplexity(String psswd) {
+	private Map<Integer, String> calculateComplexity(String psswd) {
 		log.info("calculateComplexity...");
 		
-		Map<Boolean, String> complexity = new HashMap<>();
+		Map<Integer, String> complexity = new HashMap<>();
+		int psswdlength = psswd.length();
 		
-		if(psswd.length() > 15)
-			complexity.put(true, VERY_STRONG);		
-		if(psswd.length() > 8 && psswd.length() <= 15)
-			complexity.put(true, STRONG);
-		if(psswd.length() > 5 && psswd.length() <= 8)
-			complexity.put(true, GOOD);
-		if(psswd.length() == 0 && psswd.length() <= 5)
-			complexity.put(false, WEAK);
-		if(psswd.length() == 0 )
-			complexity.put(false, VERY_WEAK);
+		if(psswdlength > 15)
+			complexity.put(psswdlength, VERY_STRONG);		
+		if(psswdlength > 8 && psswdlength <= 15)
+			complexity.put(psswdlength, STRONG);
+		if(psswdlength > 5 && psswdlength <= 8)
+			complexity.put(psswdlength, GOOD);
+		if(psswdlength == 0 && psswdlength <= 5)
+			complexity.put(psswdlength, WEAK);
+		if(psswdlength == 0 )
+			complexity.put(psswdlength, VERY_WEAK);
 		
 		return complexity;
 	}
 	
-	private boolean calculateScore(String psswd, Model model) {
-		boolean valid = false;
+	private Map<Integer, String> calculateScore(String psswd) {
 		
-		String score = calculateScore(psswd);
-		
-		if(score.equals("valid"));
-			valid = true;
-			
-		return valid;
-	}
-	
-	private String calculateScore(String psswd) {
 		log.info("calculateScore...");
-		String score = "";
+		Map<Integer, String> score = new HashMap<>();
+		int psswdlength = psswd.length();
+		
+		if(psswdlength > 15)
+			score.put(psswdlength, "100%");		
+		if(psswdlength > 8 && psswdlength <= 15)
+			score.put(psswdlength, "75%");
+		if(psswdlength > 5 && psswdlength <= 8)
+			score.put(psswdlength, "50%");
+		if(psswdlength == 0 && psswdlength <= 5)
+			score.put(psswdlength, "30%");
+		if(psswdlength == 0 )
+			score.put(psswdlength, "15%");
 		
 		return score;
 	}

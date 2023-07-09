@@ -35,8 +35,8 @@
 				</div>
 				<div class="col-2">	
 					<label>Complexidade</label>			
-					<input type="text" th:field="*{collaborator.complexity}"
-						   class="form-control collaboratorComplexity cc"/>
+					<span th:value="${collaborator.complexity}"
+						   class="form-control complexity collaboratorComplexity"></span>
 				</div>
 				<div class="col-3" >
 					<label>Superior(es)</label>
@@ -73,7 +73,13 @@
 						</div>
 					</td>
 					<td class="text-center"><span class="fw-600" th:text="${collaborator.score}"></span></td>
-					<td class="td-striped status border-bottom-0"><span class="active" th:text="${collaborator.complexity}"></span></td>
+					<td class="td-striped status border-bottom-0">
+						<span class="very-strong-td" th:text="${collaborator.complexity}" th:if="${collaborator.complexity == 'Very Strong'}"></span>
+						<span class="strong" th:text="${collaborator.complexity}" th:if="${collaborator.complexity == 'Strong'}"></span>
+						<span class="good" th:text="${collaborator.complexity}" th:if="${collaborator.complexity == 'Good'}"></span>
+						<span class="weak" th:text="${collaborator.complexity}" th:if="${collaborator.complexity == 'Weak'}"></span>
+						<span class="very-weak" th:text="${collaborator.complexity}" th:if="${collaborator.complexity == 'Very Weak'}"></span>
+					</td>
 					<td>
 						<a class="edit" href="javascript:void(0);" th:value="${collaborator.id}"
 							data-toggle="modal" data-target="#editModal" onclick="javascript:edit(this);">
