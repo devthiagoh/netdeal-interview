@@ -179,15 +179,15 @@ public class CollaboratorsService {
 		Map<Integer, String> complexity = new HashMap<>();
 		int psswdlength = psswd.length();
 		
-		if(psswdlength > 15)
+		if(psswdlength >= 20)
 			complexity.put(psswdlength, VERY_STRONG);		
-		if(psswdlength > 8 && psswdlength <= 15)
+		if(psswdlength >= 16 && psswdlength < 20)
 			complexity.put(psswdlength, STRONG);
-		if(psswdlength > 5 && psswdlength <= 8)
+		if(psswdlength >= 10 && psswdlength < 16)
 			complexity.put(psswdlength, GOOD);
-		if(psswdlength == 0 && psswdlength <= 5)
+		if(psswdlength >= 5 && psswdlength < 10)
 			complexity.put(psswdlength, WEAK);
-		if(psswdlength == 0 )
+		if(psswdlength < 5 )
 			complexity.put(psswdlength, VERY_WEAK);
 		
 		return complexity;
@@ -199,17 +199,18 @@ public class CollaboratorsService {
 		Map<Integer, String> score = new HashMap<>();
 		int psswdlength = psswd.length();
 		
-		if(psswdlength > 15)
+		if(psswdlength >= 20)
 			score.put(psswdlength, "100%");		
-		if(psswdlength > 8 && psswdlength <= 15)
+		if(psswdlength >= 16 && psswdlength < 20)
 			score.put(psswdlength, "75%");
-		if(psswdlength > 5 && psswdlength <= 8)
+		if(psswdlength >= 10 && psswdlength < 16)
 			score.put(psswdlength, "50%");
-		if(psswdlength == 0 && psswdlength <= 5)
+		if(psswdlength >= 5 && psswdlength < 10)
 			score.put(psswdlength, "30%");
-		if(psswdlength == 0 )
+		if(psswdlength < 5 )
 			score.put(psswdlength, "15%");
 		
 		return score;
 	}
 }
+
