@@ -19,6 +19,7 @@ import br.com.netdeal.domain.Collaborators;
 import br.com.netdeal.domain.Hierarchy;
 import br.com.netdeal.dto.CollaboratorDTO;
 import br.com.netdeal.repository.CollaboratorsRepository;
+import br.com.netdeal.util.Util;
 
 @Service
 public class CollaboratorsService {
@@ -132,12 +133,12 @@ public class CollaboratorsService {
 	}
 	
 	private String getComplexity(String psswd) {
-		Map<Integer, String> complexity = calculateComplexity(psswd);
+		Map<Integer, String> complexity = Util.calculateComplexity(psswd);
 		return complexity.get(psswd.length());
 	}
 	
 	private String getScore(String psswd) {
-		Map<Integer, String> score = calculateScore(psswd);
+		Map<Integer, String> score = Util.calculateScore(psswd);
 		return score.get(psswd.length());
 	}
 	
@@ -161,7 +162,7 @@ public class CollaboratorsService {
 		log.info("validateComplexity...");
 		boolean valid = false;
 		
-		Map<Integer, String> complxity = calculateComplexity(psswd);
+		Map<Integer, String> complxity = Util.calculateComplexity(psswd);
 		
 		int psswdlength = psswd.length();
 		
@@ -173,44 +174,17 @@ public class CollaboratorsService {
 		return valid;
 	}
 	
-	private Map<Integer, String> calculateComplexity(String psswd) {
-		log.info("calculateComplexity...");
-		
-		Map<Integer, String> complexity = new HashMap<>();
-		int psswdlength = psswd.length();
-		
-		if(psswdlength >= 20)
-			complexity.put(psswdlength, VERY_STRONG);		
-		if(psswdlength >= 16 && psswdlength < 20)
-			complexity.put(psswdlength, STRONG);
-		if(psswdlength >= 10 && psswdlength < 16)
-			complexity.put(psswdlength, GOOD);
-		if(psswdlength >= 5 && psswdlength < 10)
-			complexity.put(psswdlength, WEAK);
-		if(psswdlength < 5 )
-			complexity.put(psswdlength, VERY_WEAK);
-		
-		return complexity;
-	}
 	
-	private Map<Integer, String> calculateScore(String psswd) {
+	
+	private Map<String, String> caluculateComplexityAndScore(String psswd){
 		
 		log.info("calculateScore...");
-		Map<Integer, String> score = new HashMap<>();
+		Map<String, String> complexityAndScore = new HashMap<>();
 		int psswdlength = psswd.length();
 		
-		if(psswdlength >= 20)
-			score.put(psswdlength, "100%");		
-		if(psswdlength >= 16 && psswdlength < 20)
-			score.put(psswdlength, "75%");
-		if(psswdlength >= 10 && psswdlength < 16)
-			score.put(psswdlength, "50%");
-		if(psswdlength >= 5 && psswdlength < 10)
-			score.put(psswdlength, "30%");
-		if(psswdlength < 5 )
-			score.put(psswdlength, "15%");
+		complexityAndScore = Util.caluculateComplexityAndScore(psswd);
 		
-		return score;
+		return complexityAndScore;
 	}
 }
 
