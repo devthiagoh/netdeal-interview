@@ -8301,7 +8301,7 @@ input[readonly] {
 }
 
 .very-weak {	
-	background-position: -12px center;
+	background-position: 0px center;
 	background-image: url(../img/bg_strength_gradient.jpg);
 }
 
@@ -8326,7 +8326,12 @@ input[readonly] {
 }
 
 .very-strong-td {	
-	background-position: -310px center;
+	background-position: -305px center;
+	background-image: url(../img/bg_strength_gradient.jpg);
+}
+
+.weak-td {	
+	background-position: -80px center;
 	background-image: url(../img/bg_strength_gradient.jpg);
 }
   
