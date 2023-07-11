@@ -1,6 +1,6 @@
 package br.com.netdeal.util;
 
-import java.util.Arrays;
+import java.util.Base64;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -64,9 +64,11 @@ public class Util {
 	private static final String TOO_SHORT_PERCENT = "0%";
 	
 	public static ComplexityAndScoreDTO calculateComplexityAndScore(String psswd) {
-				
-		Integer totalAdditions = calculateAdditions(psswd);
-		Integer totalDeductions = calculateDeductions(psswd);
+		
+		String psswdDecoded = decodeBase64(psswd);
+		
+		Integer totalAdditions = calculateAdditions(psswdDecoded);
+		Integer totalDeductions = calculateDeductions(psswdDecoded);
 		
 		Integer force = totalAdditions - totalDeductions;
 		
@@ -92,11 +94,11 @@ public class Util {
 		Integer requirements = getRequirements(psswd);
 		
 		totalAdditions = numberOfCharacters + 
-						 uppercaseLetters +
+						 uppercaseLetters + 
 						 lowercaseLetters + 
 						 numbers + 
-						 symbols +
-						 middleNumbersOrSymbols +
+						 symbols + 
+						 middleNumbersOrSymbols + 
 						 requirements;
 		
 		return totalAdditions;
@@ -231,6 +233,8 @@ public class Util {
 				(containUpperCase && containNumbers && containSymbols || containLowerCase ))
 			bonus = requirements * ratio; //+(n*2)
 		
+		//System.out.println("requeriments: " +bonus);
+		
 		return bonus;
 	}
 	
@@ -238,10 +242,10 @@ public class Util {
 		
 		boolean contain = false;
 		
-		if(psswd.isEmpty()) 
+		if(psswd.isEmpty() && psswd.length() < 8) 
 			return contain;
 		if(psswd.length() >= 8)
-			return contain;
+			contain = true;
 		
 		return contain;
 	}
@@ -516,4 +520,12 @@ public class Util {
 		return score;
 	}
 	
+	private static String decodeBase64(String encoded) {
+		
+		byte[] decodedBytes = Base64.getDecoder().decode(encoded);
+		String decodedString = new String(decodedBytes);
+		
+		System.out.println("Senha: " +decodedString);
+		return decodedString;
+	} 
 }

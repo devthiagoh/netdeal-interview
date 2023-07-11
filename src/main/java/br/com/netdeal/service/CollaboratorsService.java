@@ -148,15 +148,16 @@ public class CollaboratorsService {
 	public boolean validatePsswd(String psswd, Model model) {
 		
 		log.info("validatePsswd...");
+		
 		boolean valid = false;
 		
 		if(psswd.isEmpty()) 
 			return valid;
-		if(psswd.length() < 2)
-			return valid;
+//		if(psswd.length() < 8)
+//			return valid;
 		
 		valid = validateComplexity(psswd, model);
-		valid = true;
+		
 		return valid;
 	}
 	
