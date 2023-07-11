@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,7 +43,6 @@ public class CollaboratorsController {
 	}
 	
 	@ResponseBody
-//	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	@PostMapping(value = "save", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public String save(@Validated @RequestBody CollaboratorDTO dto, Model model) {
 		

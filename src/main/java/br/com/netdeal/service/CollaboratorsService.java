@@ -5,12 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,6 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import br.com.netdeal.domain.Collaborators;
 import br.com.netdeal.domain.Hierarchy;
 import br.com.netdeal.dto.CollaboratorDTO;
+import br.com.netdeal.dto.ComplexityAndScoreDTO;
 import br.com.netdeal.repository.CollaboratorsRepository;
 import br.com.netdeal.util.Util;
 
@@ -65,6 +67,7 @@ public class CollaboratorsService {
 		model.addAttribute("collaborators", repository.findAll());
 	}
 	
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public void save(CollaboratorDTO dto, Model model) throws Exception{
 		
 		if(Objects.nonNull(dto)){
@@ -118,7 +121,7 @@ public class CollaboratorsService {
 	
 	public void delete(String id, Model model){
 		
-		Optional<Collaborators> collaborator =  repository.findById(id);
+		Collaborators collaborator =  repository.findById(id).orElseGet(null);
 		
 		if(Objects.nonNull(collaborator))
 			repository.deleteById(id);
@@ -133,13 +136,13 @@ public class CollaboratorsService {
 	}
 	
 	private String getComplexity(String psswd) {
-		Map<Integer, String> complexity = Util.calculateComplexity(psswd);
-		return complexity.get(psswd.length());
+		ComplexityAndScoreDTO complexityAndScore = calculateComplexityAndScore(psswd);
+		return complexityAndScore.getComplexity();
 	}
 	
 	private String getScore(String psswd) {
-		Map<Integer, String> score = Util.calculateScore(psswd);
-		return score.get(psswd.length());
+		ComplexityAndScoreDTO complexityAndScore = calculateComplexityAndScore(psswd);
+		return complexityAndScore.getScore();
 	}
 	
 	public boolean validatePsswd(String psswd, Model model) {
@@ -162,27 +165,27 @@ public class CollaboratorsService {
 		log.info("validateComplexity...");
 		boolean valid = false;
 		
-		Map<Integer, String> complxity = Util.calculateComplexity(psswd);
-		
-		int psswdlength = psswd.length();
-		
-		log.info(complxity.get(psswdlength));
+		ComplexityAndScoreDTO complexityAndScore = calculateComplexityAndScore(psswd);
 				
-		String complexity = complxity.get(psswdlength);
+		String complexity = complexityAndScore.getComplexity();
 		model.addAttribute("complexity", complexity);		
 		model.addAttribute("class", classes.get(complexity));
+		
+//		if(complexity.equals(Util.VERY_STRONG) ||
+//				complexity.equals(Util.STRONG) ||
+//				complexity.equals(Util.GOOD))
+			valid = true;
+		
 		return valid;
 	}
 	
 	
 	
-	private Map<String, String> caluculateComplexityAndScore(String psswd){
+	private ComplexityAndScoreDTO calculateComplexityAndScore(String psswd){
 		
-		log.info("calculateScore...");
-		Map<String, String> complexityAndScore = new HashMap<>();
-		int psswdlength = psswd.length();
+		log.info("caluculateComplexityAndScore...");
 		
-		complexityAndScore = Util.caluculateComplexityAndScore(psswd);
+		ComplexityAndScoreDTO complexityAndScore = Util.calculateComplexityAndScore(psswd);
 		
 		return complexityAndScore;
 	}

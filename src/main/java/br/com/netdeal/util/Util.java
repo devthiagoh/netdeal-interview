@@ -1,12 +1,11 @@
 package br.com.netdeal.util;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import br.com.netdeal.service.CollaboratorsService;
+import br.com.netdeal.dto.ComplexityAndScoreDTO;
 
 /*
 //Number of Characters	Flat	+(n*4)
@@ -50,220 +49,471 @@ public class Util {
 	
 	private static final Logger log = LogManager.getLogger(Util.class);
 	
-	private static final String VERY_STRONG = "Very Strong";
-	private static final String STRONG = "Strong";
-	private static final String GOOD = "Good";
-	private static final String WEAK = "Weak";
-	private static final String VERY_WEAK = "Very Weak";
-	private static final String TOO_SHORT = "Too Short";
+	public static final String VERY_STRONG = "Very Strong";
+	public static final String STRONG = "Strong";
+	public static final String GOOD = "Good";
+	public static final String WEAK = "Weak";
+	public static final String VERY_WEAK = "Very Weak";
+	public static final String TOO_SHORT = "Too Short";
 	
-	public static Map<String, String> caluculateComplexityAndScore(String psswd) {
+	private static final String VERY_STRONG_PERCENT = "100%";
+	private static final String STRONG_PERCENT = "75%";
+	private static final String GOOD_PERCENT = "50%";
+	private static final String WEAK_PERCENT = "30%";
+	private static final String VERY_WEAK_PERCENT = "15%";
+	private static final String TOO_SHORT_PERCENT = "0%";
+	
+	public static ComplexityAndScoreDTO calculateComplexityAndScore(String psswd) {
+				
+		Integer totalAdditions = calculateAdditions(psswd);
+		Integer totalDeductions = calculateDeductions(psswd);
 		
-		Map<String, String> complexityAndScore = new HashMap<>();
+		Integer force = totalAdditions - totalDeductions;
 		
-		/** Additions */
-		Double totalAdditions = calculateAdditions(psswd);
-		Double totalDeductions = calculateDeductions(psswd);
+		String complexity = calculateComplexity(force);
+		String score = calculateScore(force);
 		
-		Double total = totalAdditions - totalDeductions;
-		
-		Map<Integer, String> complexity = calculateComplexity(psswd);
-		Map<Integer, String> score = calculateScore(psswd);
-		
-		int psswdlength = psswd.length();
-		
-		complexityAndScore.put(complexity.get(psswdlength), score.get(psswdlength));
-		
+		ComplexityAndScoreDTO complexityAndScore = new ComplexityAndScoreDTO();
+		complexityAndScore.setComplexity(complexity);
+		complexityAndScore.setScore(score);
 		return complexityAndScore;
 	}
 	
-	private static Double calculateAdditions(String psswd) {
+	private static Integer calculateAdditions(String psswd) {
 		
-		Double totalAdditions = 0.0;
+		Integer totalAdditions = 0;
 		
-		totalAdditions = numberOfCharacters(psswd, totalAdditions);
-		totalAdditions = uppercaseLetters(psswd, totalAdditions);
-		totalAdditions = lowercaseLetters(psswd, totalAdditions);
-		totalAdditions = numbers(psswd, totalAdditions);
-		totalAdditions = symbols(psswd, totalAdditions);
-		totalAdditions = middleNumbersOrSymbols(psswd, totalAdditions);
-		totalAdditions = requirements(psswd, totalAdditions);
+		Integer numberOfCharacters = countNumberOfCharacters(psswd);
+		Integer uppercaseLetters = countUppercaseLetters(psswd);
+		Integer lowercaseLetters = countLowercaseLetters(psswd);
+		Integer numbers = countNumbers(psswd);
+		Integer symbols = countSymbols(psswd);
+		Integer middleNumbersOrSymbols = countMiddleNumbersOrSymbols(psswd);
+		Integer requirements = getRequirements(psswd);
+		
+		totalAdditions = numberOfCharacters + 
+						 uppercaseLetters +
+						 lowercaseLetters + 
+						 numbers + 
+						 symbols +
+						 middleNumbersOrSymbols +
+						 requirements;
 		
 		return totalAdditions;
 	}
 	
 	/** Additions */
 	
-	public static Double numberOfCharacters(String psswd, Double totalAdditions) {
+	private static Integer countNumberOfCharacters(String psswd) {
 		
-		Double numberOfCharacters = 0.0;
-		
-		return numberOfCharacters;
+		Integer bonus = 0;
+		Integer numberOfCharacters = psswd.length();
+		Integer ratio = 4;	    
+			    
+	    bonus = numberOfCharacters * ratio;// +(n*4)
+	    
+		return bonus;
 	}
 	
-	public static Double uppercaseLetters(String psswd, Double totalAdditions) {
+	private static Integer countUppercaseLetters(String psswd) {
+						
+		Integer bonus = 0;
+		Integer uppercaseLetters = 0;
+		Integer psswdlength = psswd.length();
+		Integer ratio = 2;	    
 		
-		Double uppercaseLetters = 0.0;
-		
-		return uppercaseLetters;
+		char[] chars = psswd.toCharArray();
+
+	    for (char c : chars)
+	        if(Character.isUpperCase(c))
+	        	uppercaseLetters += uppercaseLetters++;
+	    
+	    bonus = (psswdlength - uppercaseLetters) * ratio;// +((len-n)*2)
+	    
+		return bonus;
 	}
 	
-	public static Double lowercaseLetters(String psswd, Double totalAdditions) {
+	private static Integer countLowercaseLetters(String psswd) {
+						
+		Integer bonus = 0;
+		Integer lowercaseLetters = 0;
+		Integer psswdlength = psswd.length();
+		Integer ratio = 2;	    
 		
-		Double lowercaseLetters = 0.0;
-		
-		return lowercaseLetters;
+		char[] chars = psswd.toCharArray();
+
+	    for (char c : chars)
+	        if(Character.isLowerCase(c))
+	        	lowercaseLetters += lowercaseLetters++;
+	    
+	    bonus = (psswdlength - lowercaseLetters) * ratio;// +((len-n)*2)
+	    
+		return bonus;
 	}
 	
-	public static Double numbers(String psswd, Double totalAdditions) {
+	private static Integer countNumbers(String psswd) {
+				
+		Integer bonus = 0;
+		Integer numbers = 0;
+		Integer psswdlength = psswd.length();
+		Integer ratio = 4;	    
 		
-		Double numbers = 0.0;
-		
-		return numbers;
+		char[] chars = psswd.toCharArray();
+
+	    for (char c : chars) 
+	        if(Character.isDigit(c)) 
+	        	numbers += numbers++;
+	    
+	    bonus = (psswdlength - numbers) * ratio;// +((len-n)*4)
+	    
+		return bonus;
 	}
 	
-	public static Double symbols(String psswd, Double totalAdditions) {
+	private static Integer countSymbols(String psswd) {
 		
-		Double symbols = 0.0;
+		Integer bonus = 0;
+		Integer symbols = 0;
+		Integer psswdlength = psswd.length();
+		Integer ratio = 4;	    
 		
-		return symbols;
+		char[] chars = psswd.toCharArray();
+
+	    for (char c : chars) 
+	        if(!Character.isDigit(c) && !Character.isLetter(c))
+	        	symbols += symbols++;
+	    
+	    bonus = (psswdlength - symbols) * ratio;// +((len-n)*4)
+	    
+		return bonus;
 	}
 	
-	public static Double middleNumbersOrSymbols(String psswd, Double totalAdditions) {
+	private static Integer countMiddleNumbersOrSymbols(String psswd) {
 		
-		Double middleNumbersOrSymbols = 0.0;
+		Integer middleNumbersOrSymbols = 0;
 		
 		return middleNumbersOrSymbols;
 	}
 	
-	public static Double requirements(String psswd, Double totalAdditions) {
+	/**
+		 	- Minimum 8 characters in length
+			- Contains 3/4 of the following items:
+				- Uppercase Letters
+				- Lowercase Letters
+				- Numbers
+				- Symbols
+		 
+	 * */
+	private static Integer getRequirements(String psswd) {
 		
-		Double requirements = 0.0;
+		Integer bonus = 0;
+		Integer requirements = 0;
+		Integer ratio = 2;
 		
-		return requirements;
+		boolean containMinimumCharacters = containMinimumCharacters(psswd);
+		if(containMinimumCharacters)
+			requirements++; 
+		boolean containUpperCase = containUpperCase(psswd);
+		if(containUpperCase)
+			requirements++; 
+		boolean containLowerCase = containLowerCase(psswd);
+		if(containLowerCase)
+			requirements++; 
+		boolean containNumbers = containNumbers(psswd);
+		if(containNumbers)
+			requirements++; 
+		boolean containSymbols = containSymbols(psswd);
+		if(containSymbols)
+			requirements++; 
+		
+		if(containMinimumCharacters && 
+				(containUpperCase && containLowerCase && containNumbers || containSymbols ) ||
+				(containLowerCase && containNumbers && containSymbols || containUpperCase ) ||
+				(containUpperCase && containNumbers && containSymbols || containLowerCase ))
+			bonus = requirements * ratio; //+(n*2)
+		
+		return bonus;
+	}
+	
+	private static boolean containMinimumCharacters(String psswd) {
+		
+		boolean contain = false;
+		
+		if(psswd.isEmpty()) 
+			return contain;
+		if(psswd.length() >= 8)
+			return contain;
+		
+		return contain;
+	}
+	
+	private static boolean containUpperCase(String psswd) {
+		
+		boolean contain = false; 
+		
+		char[] chars = psswd.toCharArray();
+
+	    for (char c : chars)
+	        if(Character.isUpperCase(c))
+	        	contain = true;	    
+		
+		return contain;
+	}
+	
+	private static boolean containLowerCase(String psswd) {
+		
+		boolean contain = false; 
+		
+		char[] chars = psswd.toCharArray();
+
+	    for (char c : chars)
+	        if(Character.isLowerCase(c))
+	        	contain = true;	    
+		
+		return contain;
+	}
+	
+	private static boolean containNumbers(String psswd) {
+		
+		boolean contain = false; 
+		
+		char[] chars = psswd.toCharArray();
+
+	    for (char c : chars)
+	        if(Character.isDigit(c))
+	        	contain = true;	    
+		
+		return contain;
+	}
+	
+	private static boolean containSymbols(String psswd) {
+		
+		boolean contain = false; 
+		
+		char[] chars = psswd.toCharArray();
+
+	    for (char c : chars)
+	        if(!Character.isDigit(c) && !Character.isLetter(c))
+	        	contain = true;	    
+		
+		return contain;
 	}
 	
 	/*  Deductions **/
 
 
-	private static Double calculateDeductions(String psswd) {
+	private static Integer calculateDeductions(String psswd) {
 		
-		Double totalDeductions = 0.0;
+		Integer totalDeductions = 0;
 		
-		totalDeductions = lettersOnly(psswd, totalDeductions);
-		totalDeductions = numbersOnly(psswd, totalDeductions);
-		totalDeductions = repeatCharactersCaseInsensitive(psswd, totalDeductions);
-		totalDeductions = consecutiveUppercaseLetters(psswd, totalDeductions);
-		totalDeductions = consecutiveLowercaseLetters(psswd, totalDeductions);
-		totalDeductions = consecutiveNumbers(psswd, totalDeductions);
-		totalDeductions = sequentialLetters3Plus(psswd, totalDeductions);
-		totalDeductions = sequentialNumbers3Plus(psswd, totalDeductions);
-		totalDeductions = sequentialSymbols3Plus(psswd, totalDeductions);
+		Integer lettersOnly = countLettersOnly(psswd);
+		Integer numbersOnly = countNumbersOnly(psswd);
+		Integer repeatCharactersCaseInsensitive = countRepeatCharactersCaseInsensitive(psswd);
+		Integer consecutiveUppercaseLetters = countConsecutiveUppercaseLetters(psswd);
+		Integer consecutiveLowercaseLetters = countConsecutiveLowercaseLetters(psswd);
+		Integer consecutiveNumbers = countConsecutiveNumbers(psswd);
+		Integer sequentialLetters3Plus = countSequentialLetters3Plus(psswd);
+		Integer sequentialNumbers3Plus = countSequentialNumbers3Plus(psswd);
+		Integer sequentialSymbols3Plus = countSequentialSymbols3Plus(psswd);
+		
+		totalDeductions = lettersOnly + 
+						  numbersOnly + 
+						  repeatCharactersCaseInsensitive +
+						  consecutiveUppercaseLetters + 
+						  consecutiveLowercaseLetters + 
+						  consecutiveNumbers + 
+						  sequentialLetters3Plus + 
+						  sequentialNumbers3Plus + 
+						  sequentialSymbols3Plus;
 		
 		return totalDeductions;
 	}
 	
-	public static Double lettersOnly(String psswd, Double totalDeductions) {
+	private static Integer countLettersOnly(String psswd) {
+				
+		Integer onus = 0;
+		Integer lettersOnly = 0;
+		Integer psswdlength = psswd.length();
+		Integer ratio = -1;	    
 		
-		Double lettersOnly = 0.0;
-		
-		return lettersOnly;
+		char[] chars = psswd.toCharArray();
+
+	    for (char c : chars)
+	        if(!Character.isLetter(c))
+	            lettersOnly += ++lettersOnly;
+	    
+	    if(lettersOnly == psswdlength)
+	    	onus = psswdlength * ratio;//n - 1
+	    
+		return onus;
 	}
 	
-	public static Double numbersOnly(String psswd, Double totalDeductions) {
+	private static Integer countNumbersOnly(String psswd) {
 		
-		Double numbersOnly = 0.0;
+		Integer onus = 0;
+		Integer numbersOnly = 0;
+		Integer psswdlength = psswd.length();
+		Integer ratio = -1;	    
 		
-		return numbersOnly;
+		char[] chars = psswd.toCharArray();
+
+	    for (char c : chars)
+	        if(Character.isDigit(c))
+	        	numbersOnly += numbersOnly++;
+	    
+	    if(numbersOnly == psswdlength)
+	    	onus = psswdlength * ratio;//n - 1
+	    	    
+		return onus;
 	}
 	
-	public static Double repeatCharactersCaseInsensitive(String psswd, Double totalDeductions) {
+	private static Integer countRepeatCharactersCaseInsensitive(String psswd) {
 		
-		Double repeatCharactersCaseInsensitive = 0.0;
-		
-		return repeatCharactersCaseInsensitive;
+		Integer onus = 0;
+ 
+        return onus;
 	}
 	
-	public static Double consecutiveUppercaseLetters(String psswd, Double totalDeductions) {
+	private static Integer countConsecutiveUppercaseLetters(String psswd) {
 		
-		Double consecutiveUppercaseLetters = 0.0;
+		Integer onus = 0;
+		Integer repeat = 0;
+		Integer ratio = 2;
+        int psswdlength = psswd.length();
+ 
+        char[] chars = psswd.toCharArray();
+        
+	    for (int i = 1; i < psswdlength; i++) 
+            if (chars[i] - chars[i - 1] == 1)
+            	if(Character.isUpperCase(chars[i]) && Character.isUpperCase(chars[i - 1]))
+            		repeat++;
+	    
+	    onus = repeat * ratio;//-(n*2)
 		
-		return consecutiveUppercaseLetters;
+		return onus;
 	}
 	
-	public static Double consecutiveLowercaseLetters(String psswd, Double totalDeductions) {
+	private static Integer countConsecutiveLowercaseLetters(String psswd) {
 		
-		Double consecutiveLowercaseLetters = 0.0;
+		Integer onus = 0;
+		Integer repeat = 0;
+		Integer ratio = 2;
+        int psswdlength = psswd.length();
+ 
+        char[] chars = psswd.toCharArray();
+        
+	    for (int i = 1; i < psswdlength; i++) 
+            if (chars[i] - chars[i - 1] == 1)
+            	if(Character.isLowerCase(chars[i]) && Character.isLowerCase(chars[i - 1]))
+            		repeat++;
+	    
+	    onus = repeat * ratio;//-(n*2)
 		
-		return consecutiveLowercaseLetters;
+		return onus;
 	}
 	
-	public static Double consecutiveNumbers(String psswd, Double totalDeductions) {
+	private static Integer countConsecutiveNumbers(String psswd) {
 		
-		Double consecutiveNumbers = 0.0;
+		Integer onus = 0;
+		Integer repeat = 0;
+		Integer ratio = 2;
+        int psswdlength = psswd.length();
+ 
+        char[] chars = psswd.toCharArray();
+        
+	    for (int i = 1; i < psswdlength; i++) 
+            if (chars[i] - chars[i - 1] == 1)
+            	if(Character.isDigit(chars[i]) && Character.isDigit(chars[i - 1]))
+            		repeat++;
+	    
+	    onus = repeat * ratio;//-(n*2)
 		
-		return consecutiveNumbers;
+		return onus;
 	}
 	
-	public static Double sequentialLetters3Plus(String psswd, Double totalDeductions) {
+	private static Integer countSequentialLetters3Plus(String psswd) {
 		
-		Double sequentialLetters3Plus = 0.0;
+		Integer sequentialLetters3Plus = 0;
 		
 		return sequentialLetters3Plus;
 	}
 	
-	public static Double sequentialNumbers3Plus(String psswd, Double totalDeductions) {
+	private static Integer countSequentialNumbers3Plus(String psswd) {
 		
-		Double sequentialNumbers3Plus = 0.0;
+		Integer sequentialNumbers3Plus = 0;
 		
 		return sequentialNumbers3Plus;
 	}
 	
-	public static Double sequentialSymbols3Plus(String psswd, Double totalDeductions) {
+	private static Integer countSequentialSymbols3Plus(String psswd) {
 		
-		Double sequentialSymbols3Plus = 0.0;
+		Integer sequentialSymbols3Plus = 0;
 		
 		return sequentialSymbols3Plus;
 	}
 	
-	public static Map<Integer, String> calculateComplexity(String psswd) {
+	public static String calculateComplexity(Integer force) {
+		
 		log.info("calculateComplexity...");
+		String complexity = TOO_SHORT;
 		
-		Map<Integer, String> complexity = new HashMap<>();
-		int psswdlength = psswd.length();
-		
-		if(psswdlength >= 20)
-			complexity.put(psswdlength, VERY_STRONG);		
-		if(psswdlength >= 16 && psswdlength < 20)
-			complexity.put(psswdlength, STRONG);
-		if(psswdlength >= 10 && psswdlength < 16)
-			complexity.put(psswdlength, GOOD);
-		if(psswdlength >= 5 && psswdlength < 10)
-			complexity.put(psswdlength, WEAK);
-		if(psswdlength < 5 )
-			complexity.put(psswdlength, VERY_WEAK);
+		if(force >= 280)
+			complexity = VERY_STRONG;		
+		if(force >= 220 && force < 280)
+			complexity = STRONG;
+		if(force >= 140 && force < 220)
+			complexity = GOOD;
+		if(force >= 80 && force < 140)
+			complexity = WEAK;
+		if(force < 80 )
+			complexity = VERY_WEAK;
 		
 		return complexity;
 	}
 	
-	public static Map<Integer, String> calculateScore(String psswd) {
+	/** 
+	 * 
+	 	if(force >= 280)
+			complexity = VERY_STRONG;		
+		if(force >= 220 && force < 280)
+			complexity = STRONG;
+		if(force >= 140 && force < 220)
+			complexity = GOOD;
+		if(force >= 80 && force < 140)
+			complexity = WEAK;
+		if(force < 80 )
+			complexity = VERY_WEAK;
+			
+			
+		if(force >= 280)
+			score = VERY_STRONG_PERCENT;		
+		if(force >= 220 && force < 280)
+			score = STRONG_PERCENT;
+		if(force >= 140 && force < 220)
+			score = GOOD_PERCENT;
+		if(force >= 80 && force < 140)
+			score = WEAK_PERCENT;
+		if(force < 80 )
+			score = VERY_WEAK_PERCENT;	
+	 * 
+	 * */
+	
+	public static String calculateScore(Integer force) {
 		
 		log.info("calculateScore...");
-		Map<Integer, String> score = new HashMap<>();
-		int psswdlength = psswd.length();
+		String score = TOO_SHORT_PERCENT;
 		
-		if(psswdlength >= 20)
-			score.put(psswdlength, "100%");		
-		if(psswdlength >= 16 && psswdlength < 20)
-			score.put(psswdlength, "75%");
-		if(psswdlength >= 10 && psswdlength < 16)
-			score.put(psswdlength, "50%");
-		if(psswdlength >= 5 && psswdlength < 10)
-			score.put(psswdlength, "30%");
-		if(psswdlength < 5 )
-			score.put(psswdlength, "15%");
+		if(force >= 280)
+			score = VERY_STRONG_PERCENT;		
+		if(force >= 220 && force < 280)
+			score = STRONG_PERCENT;
+		if(force >= 140 && force < 220)
+			score = GOOD_PERCENT;
+		if(force >= 80 && force < 140)
+			score = WEAK_PERCENT;
+		if(force < 80 )
+			score = VERY_WEAK_PERCENT;	
 		
 		return score;
 	}
-
+	
 }
